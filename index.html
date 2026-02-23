@@ -246,7 +246,7 @@ function submitForm() {
     middle_liner_rate: document.getElementById("middle_liner_rate").value
   };
 
-  fetch("http://localhost:5678/webhook/quote-rsc", {
+  fetch("http://localhost:5680/webhook/quote-rsc", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -260,5 +260,6 @@ function submitForm() {
 
 </body>
 </html>
+
 
 
