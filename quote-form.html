@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RSC Quotation Engine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .card {
+      max-width: 720px;
+      background: #ffffff;
+      margin: auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-weight: 600;
+      color: #222;
+    }
+
+    .section-title {
+      margin-top: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    input, select {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 13px;
+      background: #fafafa;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #007bff;
+      background: #fff;
+    }
+
+    .greyed {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      background: #007bff;
+      border: none;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056d2;
+    }
+
+    @media(max-width: 600px){
+      .grid-3, .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>RSC Box Quotation</h2>
+
+<div class="section-title">Dimensions</div>
+<div class="grid-3">
+  <div class="field">
+    <label>Length</label>
+    <input type="number" id="length">
+  </div>
+  <div class="field">
+    <label>Width</label>
+    <input type="number" id="width">
+  </div>
+  <div class="field">
+    <label>Height</label>
+    <input type="number" id="height">
+  </div>
+</div>
+
+<div class="grid-3" style="margin-top:12px;">
+  <div class="field">
+    <label>Unit</label>
+    <select id="unit">
+      <option value="mm">mm</option>
+      <option value="inch">inch</option>
+      <option value="cm">cm</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Quantity</label>
+    <input type="number" id="quantity">
+  </div>
+  <div class="field">
+    <label>Ply</label>
+    <select id="ply" onchange="toggleExtraFields()">
+      <option value="3">3 Ply</option>
+      <option value="5">5 Ply</option>
+    </select>
+  </div>
+</div>
+
+<div class="section-title">Specifications</div>
+<div class="grid-2">
+  <div class="field">
+    <label>Printing</label>
+    <select id="printing">
+      <option value="0">Plain</option>
+      <option value="1">1 Colour</option>
+      <option value="2">2 Colour</option>
+    </select>
+  </div>
+ </div>
+<div class="section-title">Paper Details</div>
+
+<div class="grid-2">
+  <div class="field">
+    <label>Top Liner GSM</label>
+    <input type="number" id="top_liner_gsm">
+  </div>
+  <div class="field">
+    <label>Top Liner Rate (₹/kg)</label>
+    <input type="number" id="top_liner_rate">
+  </div>
+</div>
+
+<div class="grid-2" style="margin-top:12px;">
+  <div class="field">
+    <label>Medium GSM</label>
+    <input type="number" id="medium_gsm">
+  </div>
+  <div class="field">
+    <label>Medium Rate (₹/kg)</label>
+    <input type="number" id="medium_rate">
+  </div>
+</div>
+
+<div class="grid-2" style="margin-top:12px;">
+  <div class="field">
+    <label>Bottom Liner GSM</label>
+    <input type="number" id="bottom_liner_gsm">
+  </div>
+  <div class="field">
+    <label>Bottom Liner Rate (₹/kg)</label>
+    <input type="number" id="bottom_liner_rate">
+  </div>
+</div>
+
+<div id="extra_fields" class="greyed">
+
+  <div class="grid-2" style="margin-top:12px;">
+    <div class="field">
+      <label>Middle Liner GSM (5 Ply)</label>
+      <input type="number" id="middle_liner_gsm">
+    </div>
+    <div class="field">
+      <label>Middle Liner Rate (₹/kg)</label>
+      <input type="number" id="middle_liner_rate">
+    </div>
+  </div>
+
+</div>
+
+<button type="button" onclick="submitForm()">Submit</button>
+
+</div>
+
+<script>
+
+function toggleExtraFields() {
+  var ply = document.getElementById("ply").value;
+  var extra = document.getElementById("extra_fields");
+
+  if (ply == "5") {
+    extra.classList.remove("greyed");
+  } else {
+    extra.classList.add("greyed");
+  }
+}
+
+function submitForm() {
+  const data = {
+    length: document.getElementById("length").value,
+    width: document.getElementById("width").value,
+    height: document.getElementById("height").value,
+    unit: document.getElementById("unit").value,
+    quantity: document.getElementById("quantity").value,
+    ply: document.getElementById("ply").value,
+    printing: document.getElementById("printing").value,
+    top_liner_gsm: document.getElementById("top_liner_gsm").value,
+    top_liner_rate: document.getElementById("top_liner_rate").value,
+    medium_gsm: document.getElementById("medium_gsm").value,
+    medium_rate: document.getElementById("medium_rate").value,
+    bottom_liner_gsm: document.getElementById("bottom_liner_gsm").value,
+    bottom_liner_rate: document.getElementById("bottom_liner_rate").value,
+    middle_liner_gsm: document.getElementById("middle_liner_gsm").value,
+    middle_liner_rate: document.getElementById("middle_liner_rate").value
+  };
+
+  fetch("http://localhost:5678/webhook/quote-rsc", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => alert("Quote submitted successfully"))
+  .catch(error => alert("Error submitting form"));
+}
+</script>
+
+</body>
+</html>
