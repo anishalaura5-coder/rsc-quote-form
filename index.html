@@ -245,6 +245,19 @@ if (honeypot) {
   submitBtn.innerText = "Submit Quote";
   return;
 }
+  
+  // Validate required fields for 5 Ply
+  if (ply == "5") {
+    const middleGsm = document.getElementById("middle_liner_gsm").value;
+    const middleRate = document.getElementById("middle_liner_rate").value;
+
+    if (!middleGsm || !middleRate) {
+      alert("Middle liner GSM and rate are required for 5 Ply.");
+      submitBtn.disabled = false;
+      submitBtn.innerText = "Submit Quote";
+      return;
+    }
+  }
 
   const data = {
     length: document.getElementById("length").value,
@@ -296,6 +309,7 @@ if (honeypot) {
 
 </body>
 </html>
+
 
 
 
