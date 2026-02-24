@@ -222,10 +222,22 @@ function toggleExtraFields() {
   var ply = document.getElementById("ply").value;
   var extra = document.getElementById("extra_fields");
 
+  var gsm = document.getElementById("middle_liner_gsm");
+  var rate = document.getElementById("middle_liner_rate");
+
   if (ply == "5") {
     extra.classList.remove("greyed");
+    gsm.required = true;
+    rate.required = true;
   } else {
     extra.classList.add("greyed");
+
+    // Clear values when switching to 3 ply
+    gsm.value = "";
+    rate.value = "";
+
+    gsm.required = false;
+    rate.required = false;
   }
 }
 
@@ -309,6 +321,7 @@ if (honeypot) {
 
 </body>
 </html>
+
 
 
 
